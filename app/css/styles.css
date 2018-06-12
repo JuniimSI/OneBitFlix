@@ -1,0 +1,37 @@
+
+.circle {
+    width: 40px;
+    height: 40px;
+    left: 50%;
+    top: 50%;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&1+0,0+77 */
+  background: -moz-linear-gradient(top,  red, rgba(0,0,0,0) 77%, rgba(1,1,0,0) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  red,rgba(0,0,0,0) 77%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  red ,rgba(0,0,0,0) 77%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
+  
+    border-radius: 50%;
+    animation: anim 0.5s infinite linear;
+    position: absolute;
+  }
+  .circle:after {
+    position: absolute;
+    display: block;
+    top: 5px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    content: "";
+    background-color: #000;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  
+  @keyframes anim {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
