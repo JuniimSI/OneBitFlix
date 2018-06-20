@@ -1,5 +1,5 @@
 <template>
-  <v-footer height="auto" class="black">
+  <v-footer style="padding-top: 50px;" height="auto" class="black">
     <v-layout row wrap justify-center>
       <v-flex xs12 pt-2 text-xs-center white--text>
         App Baseado no <a href="https://netflix.com" class="white--text" target="_blank">

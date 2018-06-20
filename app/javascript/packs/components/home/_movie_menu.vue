@@ -11,7 +11,7 @@
         </v-btn>
       </v-flex>
       <Details v-if="contentActive == 'details'" :reviews="reviews" :watchable="watchable" />
-      <!-- <Episodes v-if="contentActive == 'episodes'"/> -->
+      <Episodes style="padding-bottom: 40px; padding-top: 20px;" v-if="contentActive == 'episodes'" :watchable="watchable"/>
       <Reviews v-if="contentActive == 'reviews'" :reviews="reviews" :id="watchable.attributes.id" :type="watchable.type"/>
     </v-layout>
     <v-layout row wrap class="navigation">
@@ -42,6 +42,7 @@
 <script>
   import Details from './_details.vue';
   import Reviews from './_reviews.vue';
+  import Episodes from './_episodes.vue';
   import { mapActions } from 'vuex'
   import { mapState } from 'vuex'
 
@@ -81,6 +82,7 @@
     components: {
       Details: Details,
       Reviews: Reviews,
+      Episodes: Episodes
     },
     watch: { 
       id: function() {

@@ -7,6 +7,7 @@
     "jquery": "^3.3.1",
     "material-design-icons-iconfont": "^3.0.3",
     "vue": "^2.5.16",
+    "vue-content-loader": "^0.2.1",
     "vue-dplayer": "^0.0.9",
     "vue-fixed-header": "^1.0.1",
     "vue-loader": "14.2.2",

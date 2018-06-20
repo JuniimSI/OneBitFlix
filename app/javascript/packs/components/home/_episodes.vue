@@ -1,56 +1,36 @@
 <template>
-  <div>
-    <v-layout row wrap class="lista movie_list" v-if="movies.length > 0">
+
+    <v-layout row wrap class="flex movie-list" v-if="watchable.relationships.episodes.data.length > 0">
       <v-flex xs12>
-        <p class='name'>{{ name }} {{movies.length}}</p>
         <slick ref="slick" :options="slickOptions">
-          <a v-for="movie in movies"
-              :key="movie.attributes.id" 
-              href="#"
-              @click="openDetails($event, movie.attributes.id, movie.type)"
-              >
+          <a v-for="episode in watchable.attributes.episodes"
+              :key="episode.id">
               <div class="show-image">
-              <img :src="movie.attributes.thumbnail_url">
-                <v-btn v-if="movie.type != 'serie'" flat icon color="lighten-2" text-color="white" large :to="'/watch/'+ movie.attributes.id" class="play white--text">
-                    <v-icon style="font-size: 80px;" color="red" dark>play_circle_outline</v-icon>
+                <img :src="episode.thumbnail_url">
+                <v-btn flat icon color="lighten-2" text-color="white" large :to="'/watch/'+ episode.id" class="play white--text">
+                  <v-icon style="font-size: 80px;" color="red" dark>play_circle_outline</v-icon>
                 </v-btn>
-              </div>
+            </div>
           </a>
         </slick>
       </v-flex>
     </v-layout>
-    <transition name="slide-fade">
-      <MovieMenu v-if="menuOpen && currentMovieId == movieId && show" :movieId="movieId"
-                :id="movieId" 
-                :type="movieType" 
-                :closeDetails="closeDetails"/>
-    </transition>
-  </div>
+
 </template>
 
 <script>
-  import MovieMenu from './_movie_menu.vue'
-  import Slick from 'vue-slick'
+  import Slick from 'vue-slick';
   import { mapState } from 'vuex'
-  import { ContentLoader } from "vue-content-loader"
   import { mapActions } from 'vuex'
   export default {
     props:  {
-              name: {
-                type: String,
-                required: true,
-              },
-              movies: {
-                type: Array,
-                required: true,
+              watchable: {
+                type: Object,
+                required: true
               }
             },
     data () {
       return {
-        show: false,
-        menuOpen: false,
-        movieId: null,
-        movieType: null,
         slickOptions: {
           slidesToShow: 4,
           slidesToScroll: 2,
@@ -58,13 +38,6 @@
           dots: true,
           infinite: false,
           responsive: [
-            {
-              breakpoint: 1300,
-              settings: {
-                slidesToShow: 3,
-                slidesToScroll: 2,
-              }
-            },
             {
               breakpoint: 900,
               settings: {
@@ -91,36 +64,14 @@
       }
     },
     components: {
-      Slick,
-      MovieMenu,
-      ContentLoader
+      Slick
     },
     methods: {
-      openDetails(e, id, type) {
-        e.preventDefault();
-        
-        if(this.menuOpen == true && this.movieId == id){
-          this.closeDetails();
-        }else {
-          this.changeId(id);
-          this.movieId = parseInt(id);
-          this.movieType = type;
-          this.menuOpen = true;
-          this.show = true;
-        }
-      },
-      closeDetails(){
-        this.menuOpen = false;
-        this.show = false;
-      },
-      ...mapActions({
-        changeId: 'MovieMenu/changeId',
-      })
-    },
-    computed: mapState({
-      currentMovieId: state => state.MovieMenu.currentMovieId,
-    })
-  }
+      log(){
+          console.log("CLICKED");
+      }
+    }
+}
 </script>
 
 
@@ -137,7 +88,7 @@
     border: white 3px;
   }
 
- .movie_list{
+.movie_list{
     margin-left: 4%;
     margin-top: 30px;
     margin-bottom: 20px;
@@ -155,7 +106,7 @@
     font-weight: 600;
     color: white;
   }
-  .slide-fade-enter-active {
+.slide-fade-enter-active {
   transition: all .3s ease;
 }
 .slide-fade-leave-active {
@@ -166,7 +117,6 @@
   transform: translateX(10px);
   opacity: 0;
 }
-
 .play{
   background-color: transparent;
   font-size: 80px;
@@ -180,6 +130,7 @@ div.show-image:hover img{
     -o-transform: scale(1.2);
     -ms-transform: scale(1.2);
     transform: scale(1.2);
+    z-index:20px;
 }
 div.show-image:hover .play {
     display: block;
@@ -192,4 +143,5 @@ div.show-image .play {
     top:36%;
     left:40%;
 }
+
 </style>

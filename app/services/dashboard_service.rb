@@ -1,4 +1,5 @@
 class DashboardService
+require 'json'
 
   def initialize(type, user)
     @type = type
@@ -25,5 +26,11 @@ class DashboardService
       highlight = Movie.find_by(highlighted: true)
       highlight ||= Serie.find_by(highlighted: true)
       Api::V1::WatchableSerializer.new(highlight, params: { user: @user })
+    end
+
+    def group_by_highlight_url
+      highlight = Movie.find_by(highlighted: true)
+      highlight ||= Serie.find_by(highlighted: true)
+      Api::V1::FeaturedSerializer.new(highlight, params: { user: @user })
     end
 end

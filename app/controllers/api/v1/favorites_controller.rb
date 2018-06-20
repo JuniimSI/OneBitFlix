@@ -4,7 +4,7 @@ class Api::V1::FavoritesController < ApplicationController
 
   def index
     @favorites = current_user.favorites
-    render json: Api::V1::WatchableSerializer.new(@favorites.map(&:favoritable)).serialized_json
+    render json: Api::V1::MovieSerializer.new(@favorites.map(&:favoritable)).serialized_json
   end
 
   def create

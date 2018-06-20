@@ -1,49 +1,68 @@
 <template>
   <div>
+    <content-loader v-if="featured"    
+      :speed="1"
+      primaryColor="#cecece"
+      style="opacity: 0.1"
+      secondaryColor="#ecebeb"
+    >
+              <rect x="30" y="45" rx="4" ry="4" width="100" height="12"/>         
+              <rect x="30" y="62" rx="4" ry="4" width="100" height="12" />         
+              <rect x="30" y="79" rx="3" ry="3" width="35" height="8" /> 
+              <rect x="70" y="79" rx="3" ry="3" width="35" height="8" /> 
+              <rect x="30" y="94" rx="3" ry="3" width="120" height="6" /> 
+              <rect x="30" y="105" rx="3" ry="3" width="100" height="6" />        
+
+    </content-loader>
     <v-layout row wrap class="lista movie_list" v-if="movies.length > 0">
       <v-flex xs12>
-        <p class='name'>{{ name }} {{movies.length}}</p>
+        <content-loader
+          :height="20"
+          :width="300"
+          :speed="1"
+          primaryColor="#cecece"
+          style="opacity: 0.1;"
+          secondaryColor="#ecebeb"
+        >
+          <rect x="0" y="5" rx="4" ry="4" width="120" height="12.4" /> 
+          
+        </content-loader>
         <slick ref="slick" :options="slickOptions">
+          
+          
           <a v-for="movie in movies"
-              :key="movie.attributes.id" 
+              :key="movie" 
               href="#"
-              @click="openDetails($event, movie.attributes.id, movie.type)"
               >
-              <div class="show-image">
-              <img :src="movie.attributes.thumbnail_url">
-                <v-btn v-if="movie.type != 'serie'" flat icon color="lighten-2" text-color="white" large :to="'/watch/'+ movie.attributes.id" class="play white--text">
-                    <v-icon style="font-size: 80px;" color="red" dark>play_circle_outline</v-icon>
-                </v-btn>
-              </div>
+              <content-loader
+                    :height="160"
+                    :width="300"
+                    :speed="1"
+                    primaryColor="#cecece"
+                    style="opacity: 0.2"
+                    secondaryColor="#ecebeb"
+                ></content-loader>
           </a>
         </slick>
       </v-flex>
     </v-layout>
-    <transition name="slide-fade">
-      <MovieMenu v-if="menuOpen && currentMovieId == movieId && show" :movieId="movieId"
-                :id="movieId" 
-                :type="movieType" 
-                :closeDetails="closeDetails"/>
-    </transition>
   </div>
 </template>
 
 <script>
-  import MovieMenu from './_movie_menu.vue'
   import Slick from 'vue-slick'
-  import { mapState } from 'vuex'
-  import { ContentLoader } from "vue-content-loader"
-  import { mapActions } from 'vuex'
+   import { ContentLoader } from "vue-content-loader"
+
   export default {
     props:  {
-              name: {
-                type: String,
-                required: true,
-              },
               movies: {
                 type: Array,
                 required: true,
-              }
+              },
+              featured: {
+                type: Number,
+                required: false,
+              },
             },
     data () {
       return {
@@ -92,34 +111,9 @@
     },
     components: {
       Slick,
-      MovieMenu,
       ContentLoader
-    },
-    methods: {
-      openDetails(e, id, type) {
-        e.preventDefault();
-        
-        if(this.menuOpen == true && this.movieId == id){
-          this.closeDetails();
-        }else {
-          this.changeId(id);
-          this.movieId = parseInt(id);
-          this.movieType = type;
-          this.menuOpen = true;
-          this.show = true;
-        }
-      },
-      closeDetails(){
-        this.menuOpen = false;
-        this.show = false;
-      },
-      ...mapActions({
-        changeId: 'MovieMenu/changeId',
-      })
-    },
-    computed: mapState({
-      currentMovieId: state => state.MovieMenu.currentMovieId,
-    })
+    }
+    
   }
 </script>
 

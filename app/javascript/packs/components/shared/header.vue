@@ -10,8 +10,10 @@
       </v-flex>
     </v-layout>
     <v-toolbar-items class="menu_itens elevation-4" v-bind:class="{'theme--dark': theme_itens}">
-        <v-text-field @blur="desafocus" @click="focus" 
+        <v-text-field @blur="desafocus" @click="focus" @keyup.enter="search"
           flat
+          v-model="query"
+          v-on:change="search"
           prepend-icon="search"
           label="Search"
           class="hidden-sm-and-down"
@@ -42,10 +44,14 @@
 
 <script>
   import Logo from '../../assets/logo.png';
+  import { mapActions } from 'vuex'
+  import { mapState } from 'vuex'
+
   export default {
     header: '#header',
     data () { 
       return {
+        query: '',
         position: 'fixed',
         theme: false,
         theme_itens: true,
@@ -60,7 +66,18 @@
     destroyed () {
       window.removeEventListener('scroll', this.handleScroll);
     },
+    watch: {
+      query: function () {
+        this.search();
+      }
+    },
     methods: {
+      search(){
+        this.getSearch({query: this.query});
+      },
+       ...mapActions({
+            getSearch: 'Watchable/getSearch',
+      }),
       handleScroll () {
         if(window.pageYOffset > 0){
           this.theme = true; 
@@ -75,6 +92,7 @@
       focus: function () {
          this.theme = true; 
          this.transparent = false;
+         this.search();
       },
       desafocus: function (){
         this.handleScroll();

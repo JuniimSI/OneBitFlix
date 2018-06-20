@@ -19,20 +19,21 @@
       </v-layout>
       <v-layout row wrap mt-4>
         <v-flex sm3 md3>
-           <v-btn color="red"
-                 text-color="white"
-                 large
-                 class="white--text"
-                 :to="'/watch/'+ watchable.relationships.episodes.data[0].id"
-                 v-if="watchable.type == 'serie'">Assistir
-          </v-btn>
           <v-btn color="red"
                  text-color="white"
                  large
                  :to="'/watch/'+ watchable.attributes.last_watched_episode"
                  class="white--text"
-                 v-else-if="watchable.attributes.last_watched_episode">Assistir
+                 v-if="watchable.attributes.last_watched_episode">Assistir
           </v-btn>
+           <v-btn color="red"
+                 text-color="white"
+                 large
+                 class="white--text"
+                 :to="'/watch/'+ watchable.relationships.episodes.data[0].id"
+                 v-else-if="watchable.type == 'serie'">Assistir
+          </v-btn>
+          
           <v-btn color="red"
                  text-color="white"
                  large
@@ -43,7 +44,7 @@
          
         </v-flex>
         <v-flex sm3 md4>
-          <v-btn color="black" class="watch-btn white--text" large>+ Minha Lista</v-btn>
+          <v-btn v-if="watchable && watchable.type=='movie'" color="black" class="watch-btn white--text" @click="setFavorite(watchable.id, watchable.type)" large>+ Minha Lista</v-btn>
         </v-flex>
       </v-layout>
       <v-layout row wrap mt-2>
@@ -61,6 +62,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex';
+  import {mapActions} from 'vuex';
   export default {
     props: {
       watchable: {
@@ -68,9 +71,22 @@
         required: true
       }
     },
+    methods: {
+      setFavorite(id, type){
+        this.Favorite({id: id, type: type});
+      },
+       ...mapActions({
+            Favorite: 'Watchable/Favorite',
+      })
+    },
     data () {
-      return { }
-    }
+      return { 
+        
+      }
+    },
+    computed: mapState({
+        favorite: state => state.Watchable.favorite,
+      })
   }
 </script>
 

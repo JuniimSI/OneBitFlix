@@ -14,7 +14,7 @@ class Api::V1::DashboardsController < ApplicationController
     end
 
     def type_whitelist
-      unless ["category", "keep_watching", "highlight"].include?(params[:type])
+      unless ["category", "keep_watching", "highlight", "highlight_url"].include?(params[:type])
         render json: { errors: "Unpermitted type parameter" }, status: :forbidden
       end
     end

@@ -1,7 +1,19 @@
 <template>
-  <v-container mt-1 v-if="loaded">
-    <v-layout row>
+<v-container mt-1 >
+    <v-layout row v-if="!loaded">
       <v-flex xs12 md10 offset-md1 center>
+
+        <v-layout row>
+          <v-flex xs12 md10>
+            <div style="z-index: 30; top: 38%;" class="circle"></div>  
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+
+    <v-layout row v-if="loaded">
+      <v-flex xs12 md10 offset-md1 center>
+
         <v-layout row>
           <v-flex xs12 md10>
             <h1 class="main_title" v-if="serie">{{ serie.attributes.title }}</h1>
@@ -10,10 +22,26 @@
         </v-layout>
 
         <v-layout row pt-2 pb-2>
+          
           <v-flex xs12 md12>
-            <d-player :options="options"
+            <v-layout v-if="showProgress" class="content" wrap row>
+              <div style="z-index: 30; top: 38%;" class="circle"></div>  
+            </v-layout>
+            <d-player v-if="serie" :options="options"
                   ref="player"
                   @loadstart="setupPlayer"
+                  @loadeddata="indiceOf"
+                  @emptied="showProgressLoad"
+                  @ended="finishPlayer"
+                  @canplay="hideProgressLoad"
+                  @timeupdate="progressUpdate"
+            > 
+            </d-player>
+            <d-player v-else :options="options"
+                  ref="player"
+                  @loadstart="setupPlayer"
+                  @canplay="hideProgressLoad"
+                  @emptied="showProgressLoad"
                   @ended="finishPlayer"
                   @timeupdate="progressUpdate"
             > 
@@ -41,7 +69,7 @@
           </v-flex>
 
           <v-flex xs8 md3 class="text-lg-right" v-if="serie">
-            <v-btn dark large>
+            <v-btn v-if="showProximo" :to="'/watch/'+serie.relationships.episodes.data[novoIndice].id" dark large>
               <v-icon left>skip_next</v-icon>Proximo
             </v-btn>
           </v-flex>
@@ -53,24 +81,30 @@
 
 <script>
   import VueDPlayer from 'vue-dplayer'
+  import { ContentLoader } from "vue-content-loader"
   import { mapActions } from 'vuex'
   import { mapState } from 'vuex'
   export default {
     data () {
-      return { 
+      return {
         options: {
           screenshot: true,
           video: { url: '', pic: '' }
         },
+        showProximo: true,
+        showProgress: true,
         lastUpdateTime: 0,
         lastUpdateActive: false,
-        loaded: false
+        loaded: false,
+        novoIndice: 0
       }
     },
     components: {
-      'd-player': VueDPlayer
+      'd-player': VueDPlayer,
+      ContentLoader
     },
     methods: {
+      
       finishPlayer() {
         var currentdate = new Date(); 
         var datetime = currentdate.getDate() + "/"
@@ -89,9 +123,34 @@
         getPlayer: 'Player/show',
         updatePlayer: 'Player/update'
       }),
+       showProgressLoad(){
+         this.showProgress = !this.showProgress;
+       },
+       hideProgressLoad(){
+         this.showProgress = false;
+       },
+       indiceOf: function(){
+          this.showProgress = false;
+          let index = 0;
+          if(this.serie.relationships.episodes.data[this.serie.relationships.episodes.data.length - 1].id == this.player.id){
+            this.showProximo = false;
+            return;
+          }else{
+            this.showProximo = true;
+          }
+            this.serie.relationships.episodes.data.forEach(element => {
+                this.showProximo = true;
+              if(element.id == this.player.id){
+                this.novoIndice = (index+1);
+              }
+              index += 1;
+            });
+   
+      },
       setupPlayer() {
         if(this.player && this.player.elapsed_time != null){
           this.$refs.player.dp.seek(this.player.elapsed_time);
+          //this.indiceOf();
         }
       },
       progressUpdate() {
@@ -114,11 +173,13 @@
       this.getPlayer(this.$route.params.id)
     },
     computed: {
+     
       ...mapState({
         player: state => state.Player.player,
         movie: state => state.Player.movie,
-        serie: state => state.Player.serie,
-      })
+        serie: state => state.Player.serie,  
+      }),
+
     },
     watch: {
       movie:function () {
