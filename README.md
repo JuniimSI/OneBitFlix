@@ -1,24 +1,5 @@
-# README
+# Aplicação OneBitFlix - Clone do Netflix
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Desenvolvido durante a semana super full-stack da onebitcode. <br />
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Utilizando Ruby on Rails - VueJs - Serviços da Amazon Aws
